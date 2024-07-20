@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+<h3> {{ assignment.title }} </h3>
+<p>{{ assignment.question }}</p>
+<p> Deadline: {{ assignment.deadline }} </p>
+
+<h3> Submit the Assignment here: </h3>
+{% if not submitted %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit">Submit</button>
+</form>
+
+{% else %}
+
+You have already submitted this assignment. <br><br>
+
+{% endif %}
+
+{% if request.user.userrole.role == 'admin' or request.user.userrole.role == 'teacher' %}
+
+<a href="{% url 'all_assignments' assignment.slug %}"> View All the Answers from this assignment. </a>
+
+{% endif %}
+{% endblock %}

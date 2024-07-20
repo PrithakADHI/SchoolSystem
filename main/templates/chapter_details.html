@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <h1>{{ chapter.name }}</h1>
+    </div>
+  </div>
+
+      <h3>Materials for Download</h3>
+      {% for material in materials %}
+      <p>{{ material.title }} - <a href="{{ material.pdf.url }}">View in Browser</a> <a href="{{ material.pdf.url }}" download>Download</a></p>
+      {% endfor %}
+
+
+  <div class="row mt-4">
+    <div class="col-12 col-md-8">
+      <h3>Assignments</h3>
+      {% for assignment in assignments %}
+      <a href="{% url 'assignment_details' assignment.slug %}"><h4>{{ assignment.title }}</h4></a>
+      {% endfor %}
+    </div>
+
+    {% if request.user.userrole.role == 'admin' or request.user.userrole.role == 'teacher' %}
+    <div class="col-12 col-md-4">
+      <h3 class="mt-md-0">Add Material</h3>
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ material_form|crispy }}
+        <button class="btn btn-primary" type="submit" name="material_submit">Submit</button>
+      </form>
+
+      <hr>
+
+      <h3 class="mt-4 mt-md-0">Add Assignment</h3>
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ assignment_form|crispy }}
+        <button class="btn btn-primary" type="submit" name="assignment_submit">Submit</button>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %} Submitted Assignments {% endblock %}
+
+{% block content %}
+
+<h1> Your Submitted Assignments </h1>
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Chapter Name</th>
+        <th scope="col">Assignment Name</th>
+        <th scope="col">Marks Obtained</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for assignment in assignments %}
+      <tr>
+        <td scope="row">{{ assignment.assignment.chapter.name }}</td>
+        <td>{{ assignment.assignment.title }}</td>
+        <td>{{ assignment.marks }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

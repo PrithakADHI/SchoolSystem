@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ semester.name }}<br>
+
+{% for subject in subjects %}
+
+<a href="{% url 'subject_details' subject.slug %}">{{ subject.code }} - {{ subject.name }}</a> <br>
+
+{% endfor %}
+{% endblock %}

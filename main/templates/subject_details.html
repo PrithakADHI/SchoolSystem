@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<script src="https://kenwheeler.github.io/slick/slick/slick.js"></script>
+
+<style>
+    .body-container {
+        width:auto;
+        height:auto;
+      }
+      
+      .card {
+        transition: transform 0.3s;;
+        transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .card:hover {
+        transform: translateY(-10px);
+    
+    }
+    
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+    
+</style>
+
+<h4 class="heading text-center my-4 font-weight-bold">{{subject.code}} - {{ subject.name }}</h1>
+
+<div class='body-container container'>
+    <div class='row'>
+    {% for chapter in chapters %}
+    <div class="col-md-4 mb-4">
+        <a href="{% url 'chapter_details' chapter.slug %}">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="img-fluid fa fa-file-text" style="max-height: 30px;"></i>
+                            <span> Chapter </span>
+                        </div>
+                    </div>
+                    <h5 class="card-title mt-3">{{ chapter.name }}</h5>
+                    <small class="badge bg-warning text-dark">Assignments: {{ chapter.total_assignments }}</small>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+</div>
+{% comment %} <hr>
+
+<div class="chapters">
+    <h3> Chapters </h3>
+    
+    {% for chapter in chapters %}
+    
+    <a href="{% url 'chapter_details' chapter.slug %}">{{ chapter.name }}</a> <br>
+    
+    {% endfor %}
+</div>
+
+<hr>
+
+<div class="syllabus">
+<h3> Syllabus </h3>
+{{ syllabus|safe }}
+</div>
+
+
+<style>
+
+.syllabus {
+    white-space: pre-wrap;
+}
+
+
+
+h6 {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+}
+
+
+</style> {% endcomment %}
+
+<script>
+    $(document).ready(function(){
+        $(".responsive").slick({
+            prevArrow: $(".prev"),
+            nextArrow: $(".next"),
+            infinite: false,
+            speed: 300,
+            slidesToShow: 3,
+            slidesToScroll: 3,
+            responsive: [
+                {
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 3,
+                        infinite: false
+                    }
+                },
+                {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
+                }
+            ]
+        });
+
+        let clickTimer = null;
+        let isSwiping = false;
+
+        function handleClick(event, url) {
+            if (isSwiping) {
+                isSwiping = false;
+                return;
+            }
+
+            if (clickTimer) {
+                clearTimeout(clickTimer);
+                clickTimer = null;
+                return;
+            }
+
+            clickTimer = setTimeout(() => {
+                clickTimer = null;
+                location.href = url;
+            }, 300); // Adjust the delay as needed
+        }
+
+        $('.responsive').on('touchstart mousedown', function() {
+            isSwiping = false;
+        });
+
+        $('.responsive').on('touchmove mousemove', function() {
+            isSwiping = true;
+        });
+
+        $('.responsive').on('touchend mouseup', function() {
+            setTimeout(() => { isSwiping = false; }, 300);
+        });
+    });
+      
+</script>
+
+{% endblock %}

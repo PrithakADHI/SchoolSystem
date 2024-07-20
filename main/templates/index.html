@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+
+    canvas {
+        border: 1px dotted red;
+      }
+
+    .chart-container-1 {
+        height: 150px;
+        flex: 0 0 auto;
+        width: 70%;
+      }
+
+      @media (max-width: 768px) {
+        .chart-container-1 {
+          width: 100%;
+        }
+
+        .chart {
+            margin-top: 100px;
+          }
+      }
+      
+      
+    
+
+.card {
+    transition: transform 0.3s;;
+    transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card:hover {
+    transform: translateY(-10px);
+
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+#myChart {
+    max-width: 100%;
+    height: auto;
+  }
+
+</style>
+<div class="container mt-5">
+    <div class="row">
+        {% for subject in subjects %}
+        <!-- Card 1 -->
+        <div class="col-md-4 mb-4">
+            <a href="{% url 'subject_details' subject.slug %}">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="img-fluid fa fa-book" style="max-height: 30px;"></i>
+                                <span> Subject </span>
+                            </div>
+                        </div>
+                        <h5 class="card-title mt-3">{{ subject.name }}</h5>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <small class="badge bg-warning text-dark">{{ subject.code }}</small>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="row mt-2">
+        
+        
+    <div class="col-md-2 chart-container-1">
+        <canvas id="chart-1"></canvas>
+        <p class='text-center p-4'> Your GPA over the semesters. <br> Current CGPA: {{ cgpa|floatformat:2 }} </p>
+    </div>
+
+    <div class="col-md-2 chart">
+        <canvas id="myChart" style="width:100%; max-width:300px;"></canvas>
+        <p class='text-center'> Assignments Chart </p>
+    </div>
+</div>
+    
+</div>
+
+
+
+<script>
+    
+var xValues = ["First Semester", "Second Semester", "Third Semester", "Fourth Semester", "Fifth Semester", "Sixth Semester", "Seventh Semester", "Eighth Semester"];
+var yValues = {{ sgpas|safe }}
+var barColors = ["rgba(89, 235, 106, 0.8)", "rgba(235, 99, 89, 0.4)","blue","orange","brown", "black", "green", "red"];
+
+var data1 = {
+    labels: xValues,
+    datasets: [{
+      label: "GPA",
+      backgroundColor: "rgba(255,99,132,0.2)",
+      borderColor: "rgba(255,99,132,1)",
+      borderWidth: 2,
+      hoverBackgroundColor: "rgba(255,99,132,0.4)",
+      hoverBorderColor: "rgba(255,99,132,1)",
+      data: yValues,
+    }]
+  };
+  
+  var options1 = {
+    maintainAspectRatio: false,
+    responsive: true,
+    scales: {
+      yAxes: [{
+        stacked: true,
+        gridLines: {
+          display: true,
+          color: "rgba(255,99,132,0.2)"
+        },
+        ticks: {
+          suggestedMin: 0, // Set this to a value lower than your lowest GPA
+          suggestedMax: 4.0 // Set this to a value higher than your highest GPA
+        }
+      }],
+      xAxes: [{
+        gridLines: {
+          display: false
+        }
+      }]
+    }
+  };
+  
+  Chart.Line('chart-1', {
+    options: options1,
+    data: data1
+  });
+
+
+  new Chart("myChart", {
+    type: "doughnut",
+    data: {
+      labels: ["Submitted", "Not Submitted"],
+      datasets: [{
+        backgroundColor: barColors,
+        data: [ {{ total_assignments|safe }}, {{ unsubmitted_assignments|safe }}]
+      }]
+    },
+    options: {
+      title: {
+        display: false,
+        text: "World Wide Wine Production 2018"
+      },
+      legend: {
+        display: false  // Hide the legend
+      }
+    }
+  });
+</script>
+  
+
+</script>
+
+
+
+{% endblock %}
