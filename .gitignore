@@ -9,8 +9,6 @@ media
 # Backup files # 
 *.bak 
 
-.env
-
 .idea/**/contentModel.xml
 
 # Sensitive or high-churn files
@@ -64,3 +62,4 @@ venv.bak/
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .history
+.vercel
